@@ -14,7 +14,7 @@ module testbench();
     integer fd_in, fd_out, scan_file;
 
     // 2. Khởi tạo module xử lý ảnh (DUT)
-    rgb2gray #(
+    lab22 #(
         .BRIGHTNESS(0) // Bạn có thể thay đổi số này (VD: 20, -10) để test chỉnh độ sáng
     ) dut (
         .clk(clk),
