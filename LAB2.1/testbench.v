@@ -16,7 +16,6 @@ module tb_median_filter;
 
     integer file_out;
     integer i, j;
-    integer idx;
 
     // Khởi tạo module lọc
     lab21 dut(
@@ -27,7 +26,7 @@ module tb_median_filter;
     );
 
     initial begin
-        // 1. Đọc file ảnh đầu vào (dưới dạng mã HEX, mỗi dòng 1 pixel)
+        // 1. Đọc file ảnh đầu vào (dưới dạng mã HEX)
         $readmemh("pic_input.txt", img_in);
         
         // 2. Mở file để ghi kết quả
@@ -35,34 +34,41 @@ module tb_median_filter;
 
         $display("Bat dau mo phong loc trung vi...");
 
-        // 3. Quét cửa sổ 3x3 qua ảnh (Bỏ qua các viền sát cạnh ảnh để đơn giản hóa)
-        for (i = 1; i < HEIGHT - 1; i = i + 1) begin
-            for (j = 1; j < WIDTH - 1; j = j + 1) begin
+        // 3. Quét TẤT CẢ pixel từ 0 đến 255
+        for (i = 0; i < HEIGHT; i = i + 1) begin
+            for (j = 0; j < WIDTH; j = j + 1) begin
                 
-                // Lấy 9 điểm ảnh lân cận
-                p1 = img_in[(i-1)*WIDTH + (j-1)];
-                p2 = img_in[(i-1)*WIDTH + j];
-                p3 = img_in[(i-1)*WIDTH + (j+1)];
-                
-                p4 = img_in[i*WIDTH + (j-1)];
-                p5 = img_in[i*WIDTH + j];      // Điểm ảnh trung tâm
-                p6 = img_in[i*WIDTH + (j+1)];
-                
-                p7 = img_in[(i+1)*WIDTH + (j-1)];
-                p8 = img_in[(i+1)*WIDTH + j];
-                p9 = img_in[(i+1)*WIDTH + (j+1)];
+                // Trường hợp 1: Pixel nằm ở rìa ngoài cùng của ảnh -> Xuất thẳng giá trị gốc
+                if (i == 0 || i == HEIGHT - 1 || j == 0 || j == WIDTH - 1) begin
+                    $fdisplay(file_out, "%02X", img_in[i*WIDTH + j]);
+                end 
+                // Trường hợp 2: Pixel nằm ở lõi ảnh -> Lấy 9 điểm lân cận đưa vào mạch
+                else begin
+                    p1 = img_in[(i-1)*WIDTH + (j-1)];
+                    p2 = img_in[(i-1)*WIDTH + j];
+                    p3 = img_in[(i-1)*WIDTH + (j+1)];
+                    
+                    p4 = img_in[i*WIDTH + (j-1)];
+                    p5 = img_in[i*WIDTH + j];      // Điểm ảnh trung tâm
+                    p6 = img_in[i*WIDTH + (j+1)];
+                    
+                    p7 = img_in[(i+1)*WIDTH + (j-1)];
+                    p8 = img_in[(i+1)*WIDTH + j];
+                    p9 = img_in[(i+1)*WIDTH + (j+1)];
 
-                // Chờ một chút thời gian để combinational logic tính toán
-                #10; 
+                    // Chờ một chút thời gian để combinational logic tính toán
+                    #10; 
 
-                // 4. Ghi kết quả ra file (Định dạng HEX)
-                $fdisplay(file_out, "%02X", median_val);
+                    // Ghi kết quả lọc ra file
+                    $fdisplay(file_out, "%02X", median_val);
+                end
+                
             end
         end
 
-        // 5. Đóng file và kết thúc
+        // 4. Đóng file và kết thúc
         $fclose(file_out);
-        $display("Hoan tat. Da xuat ra file pic_output.txt");
+        $display("Hoan tat! Da xuat day du 65536 pixel vao file pic_output.txt");
         $finish;
     end
 
