@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module testbench();
+module tb_rgb2gray();
 
     // 1. Khai báo các tín hiệu kết nối với DUT (Device Under Test)
     reg clk;
@@ -14,8 +14,8 @@ module testbench();
     integer fd_in, fd_out, scan_file;
 
     // 2. Khởi tạo module xử lý ảnh (DUT)
-    lab22 #(
-        .BRIGHTNESS(0) // Bạn có thể thay đổi số này (VD: 20, -10) để test chỉnh độ sáng
+    lab222 #(
+        .brightness(0) // Bạn có thể thay đổi số này (VD: 20, -10) để test chỉnh độ sáng
     ) dut (
         .clk(clk),
         .rst_n(rst_n),
