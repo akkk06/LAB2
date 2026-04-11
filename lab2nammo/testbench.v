@@ -3,8 +3,8 @@
 
 module testbench;
 
-    parameter WIDTH = 10;
-    parameter HEIGHT = 10;
+    parameter WIDTH = 2048;
+    parameter HEIGHT = 1365;
     reg clk;
     reg signed [8:0] brightness;
 
