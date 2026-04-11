@@ -1,9 +1,10 @@
+
 `timescale 1ns/1ps
 
 module testbench;
 
-    parameter WIDTH = 2048;
-    parameter HEIGHT = 1365;
+    parameter WIDTH = 10;
+    parameter HEIGHT = 10;
     reg clk;
     reg signed [8:0] brightness;
 
@@ -16,13 +17,11 @@ module testbench;
     integer count;
     integer write;
 
-    rgbgray #(
-        HEIGHT
-    ) DUT (
+    lab2nammo  DUT (
         clk, brightness, colR, colG, colB, colY
     );
 
-    always #5 clk = ~clk;
+    always #15 clk = ~clk;
 
     initial begin
         clk = 0;
@@ -35,13 +34,13 @@ module testbench;
         $display ("Bat dau mo phong");
     end
 
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if ( count < WIDTH ) begin
             colR <= R[count];
             colG <= G[count];
             colB <= B[count];
         end
-        if ( count == WIDTH+4 ) begin
+        if ( count == WIDTH+3 ) begin
             $fclose (write);
             $display ("Mo phong hoan tat");
             $finish;
@@ -50,7 +49,7 @@ module testbench;
     end
 
     always @(negedge clk) begin
-        if (count >= 4  && count < WIDTH+4) begin
+        if (count >= 3  && count < WIDTH+3) begin
             $fdisplay (write, "%h", colY);
         end
     end
